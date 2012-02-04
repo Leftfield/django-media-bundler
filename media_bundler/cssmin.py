@@ -16,7 +16,8 @@ def minify_css(css):
     css = re.sub(r'url\((["\'])([^)]*)\1\)', "url(\\2)", css)
     # spaces may be safely collapsed as generated content will collapse them anyway
     css = re.sub(r'\s+', " ", css)
-    return "".join(generate_rules(css))
+    return css
+    #return "".join(generate_rules(css))
 
 def generate_rules(css):
     for rule in re.findall(r'([^{]+){([^}]*)}', css):
