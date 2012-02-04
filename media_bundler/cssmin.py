@@ -17,23 +17,3 @@ def minify_css(css):
     # spaces may be safely collapsed as generated content will collapse them anyway
     css = re.sub(r'\s+', " ", css)
     return css
-    #return "".join(generate_rules(css))
-
-def generate_rules(css):
-    for rule in re.findall(r'([^{]+){([^}]*)}', css):
-        selectors = []
-        for selector in rule[0].split(','):
-            selectors.append(selector.strip())
-        # order is important, but we still want to discard repetitions
-        properties = {}
-        porder  = []
-        for prop in re.findall('(.*?):(.*?)(;|$)', rule[1]):
-            key = prop[0].strip().lower()
-            if key not in porder:
-                porder.insert(0, key)
-            properties[ key ] = prop[1].strip()
-        porder.reverse()
-        # output rule if it contains any declarations
-        if len(properties) > 0:
-            s = ";".join(key + ":" + properties[key] for key in porder)
-            yield ",".join(selectors) + "{" + s + "}"
