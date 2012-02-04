@@ -48,8 +48,11 @@ Installation
 ------------
 
 The media-bundler is a reusable app, so to install it all you have to do is
-clone the source tree, put it somewhere in Django's ``PYTHONPATH``, and add it
-to ``INSTALLED_APPS`` in ``settings.py``.
+clone the source tree, put it somewhere in Django's ``PYTHONPATH``.
+
+You can use pip with ``pip install git+https://github.com/rnk/django-media-bundler/``.
+
+After that add ``media_bundler`` to the list of applications in ``INSTALLED_APPS`` in ``settings.py``.
 
 Usage
 -----
@@ -94,7 +97,7 @@ Describe the Javascript and CSS bundles you would like to create in
 
 By default, deferring is enabled, and bundling is disabled when
 ``settings.DEBUG`` is ``True``.  You can override those values in your settings
-module.  See the ``media_bundle.default_settings`` module for more info.  
+module by setting the boolean variables ``DEFER_JAVASCRIPT`` and ``USE_BUNDLES``.  See the ``media_bundle.default_settings`` module for details on all the options.  
 
 To source your Javascript and CSS, put ``{% load bundler_tags %}`` at the top of
 your template, and wherever you used to write this::
