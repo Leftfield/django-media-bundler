@@ -89,9 +89,9 @@ class Bundle(object):
         return os.path.join(self.path, filename)
 
     def get_bundle_url(self):
-        unversioned = self.get_bundle_filename()
-        filename = versioning.get_bundle_versions().get(self.name, unversioned)
-        return self.url + filename
+        filename = self.get_bundle_filename()
+        version = versioning.get_bundle_versions().get(self.name, filename)
+        return self.url + filename + "?" + version
 
     def make_bundle(self, versioner):
         self._make_bundle()

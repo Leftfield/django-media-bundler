@@ -81,16 +81,7 @@ class VersioningBase(object):
 
     def update_bundle_version(self, bundle):
         version = self.get_version(bundle)
-        orig_path = bundle.get_bundle_path()
-        dir, basename = os.path.split(orig_path)
-        if '.' in basename:
-            name, _, extension = basename.rpartition('.')
-            versioned_basename = '.'.join((name, version, extension))
-        else:
-            versioned_basename += '.' + version
-        self.versions[bundle.name] = versioned_basename
-        versioned_path = os.path.join(dir, versioned_basename)
-        shutil.copy(orig_path, versioned_path)
+        self.versions[bundle.name] = version
 
 
 class MtimeVersioning(VersioningBase):
