@@ -104,7 +104,7 @@ class JavascriptMinify(object):
             p = self._peek()
             if p == '/':
                 c = self._get()
-                while c >= '\n':
+                while c > '\n':
                     c = self._get()
                 return c
             if p == '*':
