@@ -11,7 +11,7 @@ from StringIO import StringIO
 
 from media_bundler.conf import bundler_settings
 from media_bundler.bin_packing import Box, pack_boxes
-from media_bundler.jsmin import jsmin
+from media_bundler.jsmin import jsmin, jsmin_keep_new_lines
 from media_bundler.cssmin import minify_css
 from media_bundler import versioning
 
