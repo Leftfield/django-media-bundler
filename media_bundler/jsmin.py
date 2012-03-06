@@ -40,6 +40,16 @@ def jsmin(js):
         str = str[1:]
     return str
 
+def jsmin_keep_new_lines(js):
+    from StringIO import StringIO
+    ins = StringIO(js)
+    outs = StringIO()
+    JavascriptMinify().minify(ins, outs, False)
+    str = outs.getvalue()
+    if len(str) > 0 and str[0] == '\n':
+        str = str[1:]
+    return str
+
 def isAlphanum(c):
     """return true if the character is a letter, digit, underscore,
            dollar sign, or non-ASCII character.
@@ -94,7 +104,7 @@ class JavascriptMinify(object):
             p = self._peek()
             if p == '/':
                 c = self._get()
-                while c > '\n':
+                while c >= '\n':
                     c = self._get()
                 return c
             if p == '*':
@@ -129,7 +139,7 @@ class JavascriptMinify(object):
                     self.theA = self._get()
                     if self.theA == self.theB:
                         break
-                    if self.theA <= '\n':
+                    if self.theA <= '\n' and self.clear_new_lines:
                         raise UnterminatedStringLiteral()
                     if self.theA == '\\':
                         self._outA()
@@ -154,7 +164,7 @@ class JavascriptMinify(object):
                     elif self.theA == '\\':
                         self._outA()
                         self.theA = self._get()
-                    elif self.theA <= '\n':
+                    elif self.theA <= '\n' and self.clear_new_lines:
                         raise UnterminatedRegularExpression()
                     self._outA()
                 self.theB = self._next()
@@ -175,7 +185,7 @@ class JavascriptMinify(object):
                     self._action(1)
                 else:
                     self._action(2)
-            elif self.theA == '\n':
+            elif self.theA == '\n' and self.clear_new_lines:
                 if self.theB in ['{', '[', '(', '+', '-']:
                     self._action(1)
                 elif self.theB == ' ':
@@ -191,8 +201,8 @@ class JavascriptMinify(object):
                         self._action(1)
                     else:
                         self._action(3)
-                elif self.theB == '\n':
-                    if self.theA in ['}', ']', ')', '+', '-', '"', '\'']:
+                elif self.theB == '\n' and self.clear_new_lines:
+                    if self.theA in ['}', ']', ')', '+', '-', '"', '\''] or (self.theA == '\n' and not self.clear_new_lines):
                         self._action(1)
                     else:
                         if isAlphanum(self.theA):
@@ -202,12 +212,13 @@ class JavascriptMinify(object):
                 else:
                     self._action(1)
 
-    def minify(self, instream, outstream):
+    def minify(self, instream, outstream, clear_new_lines=True):
         self.instream = instream
         self.outstream = outstream
         self.theA = '\n'
         self.theB = None
         self.theLookahead = None
+        self.clear_new_lines = clear_new_lines
 
         self._jsmin()
         self.instream.close()

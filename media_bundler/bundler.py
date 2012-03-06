@@ -62,7 +62,8 @@ class Bundle(object):
         if attrs["type"] == "javascript":
             return JavascriptBundle(attrs["name"], attrs["path"], attrs["url"],
                                     attrs["files"], attrs["type"],
-                                    attrs.get("minify", False))
+                                    attrs.get("minify", False),
+                                    attrs.get("minify_new_lines", True))
         elif attrs["type"] == "css":
             return CssBundle(attrs["name"], attrs["path"], attrs["url"],
                              attrs["files"], attrs["type"],
@@ -113,15 +114,21 @@ class JavascriptBundle(Bundle):
 
     """Bundle for JavaScript."""
 
-    def __init__(self, name, path, url, files, type, minify):
+    def __init__(self, name, path, url, files, type, minify, minify_new_lines):
         super(JavascriptBundle, self).__init__(name, path, url, files, type)
         self.minify = minify
+        self.minify_new_lines = minify_new_lines
 
     def get_extension(self):
         return ".js"
 
     def _make_bundle(self):
-        minifier = jsmin if self.minify else None
+        minifier = None
+        if self.minify:
+            if self.minify_new_lines:
+                minifier = jsmin
+            else:
+                minifier = jsmin_keep_new_lines
         self.do_text_bundle(minifier)
 
 
