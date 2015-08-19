@@ -100,7 +100,7 @@ class Bundle(object):
             versioner.update_bundle_version(self)
 
     def do_text_bundle(self, minifier=None):
-        with open(self.get_bundle_path(), "w") as output:
+        with open(self.get_bundle_path(), "w+") as output:
             generator = concatenate_files(self.get_paths())
             if minifier:
                 # Eventually we should use generators to concatenate and minify
@@ -208,7 +208,7 @@ class PngSpriteBundle(Bundle):
 
     def generate_css(self, packing):
         """Generate the background offset CSS rules."""
-        with open(self.css_file, "w") as css:
+        with open(self.css_file, "w+") as css:
             css.write("/* Generated classes for django-media-bundler sprites.  "
                       "Don't edit! */\n")
             props = {
